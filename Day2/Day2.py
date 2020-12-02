@@ -19,10 +19,29 @@ with open('data.txt', 'r') as f:
 
     for entry in puzzle_input:
         counter = 0
-        for char in entry['password']:
-            if char == entry['char']:
-                counter += 1
-        if counter >= entry['min'] and counter <= entry['max']:
+
+        # Part 1
+        # for char in entry['password']:
+        #     if char == entry['char']:
+        #         counter += 1
+        # if counter >= entry['min'] and counter <= entry['max']:
+        #     valid_password_count += 1
+
+        # Part 2
+        try:
+            pos1 = entry['password'][entry['min']]
+        except:
+            pos1 = None
+        try:
+            pos2 = entry['password'][entry['max']]
+        except:
+            pos2 = None
+
+        if entry['char'] == pos1 and entry['char'] != pos2:
             valid_password_count += 1
 
+        if entry['char'] == pos2 and entry['char'] != pos1:
+            valid_password_count += 1
+
+            
     print(valid_password_count)
