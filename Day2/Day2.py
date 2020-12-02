@@ -16,6 +16,7 @@ with open('data.txt', 'r') as f:
                 'password': line[2].replace('\n', '')
             }
         )
+    
 
     for entry in puzzle_input:
         counter = 0
@@ -29,11 +30,11 @@ with open('data.txt', 'r') as f:
 
         # Part 2
         try:
-            pos1 = entry['password'][entry['min']]
+            pos1 = entry['password'][entry['min']-1]
         except:
             pos1 = None
         try:
-            pos2 = entry['password'][entry['max']]
+            pos2 = entry['password'][entry['max']-1]
         except:
             pos2 = None
 
