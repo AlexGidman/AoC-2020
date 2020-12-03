@@ -18,29 +18,32 @@ def create_map():
 
     return map_list
 
-# Create map
-map_list = create_map()
 
+def count_trees(RIGHT, DOWN):
+    """Counts number of trees given movements right and down"""
+    
+    # Create map
+    map_list = create_map()
 
-tree_count = 0
+    tree_count = 0
 
-x = 0
-y = 0
+    # Start coordinates
+    x = 0
+    y = 0
 
-RIGHT = 3
-DOWN = 1
+    for row in range(len(map_list)):
 
-for row in range(len(map_list)):
+        if map_list[y][x] == "#":
+            tree_count += 1
 
-    if map_list[y][x] == "#":
-        tree_count += 1
+        # if not reached end of row index
+        if x + RIGHT < (len(map_list[row])): 
+            x += RIGHT
+            y += DOWN
+        else:
+            x += RIGHT - len(map_list[row]) 
+            y += DOWN
 
-    # if not reached end of row index
-    if x + RIGHT < (len(map_list[row])): 
-        x += RIGHT
-        y += DOWN
-    else:
-        x += RIGHT - len(map_list[row]) 
-        y += DOWN
+    print(f"Trees: {tree_count}")
 
-print(f"Trees: {tree_count}")
+count_trees(RIGHT=3, DOWN=1)
