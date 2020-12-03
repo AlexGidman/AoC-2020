@@ -23,25 +23,25 @@ map_list = create_map()
 
 
 tree_count = 0
-blank_count = 0
 
 x = 0
 y = 0
+
+RIGHT = 3
+DOWN = 1
 
 for row in range(len(map_list)):
 
     if map_list[y][x] == "#":
         tree_count += 1
-    else:
-        blank_count += 1
 
     # if not reached end of row index
-    if x + 3 < (len(map_list[row])): 
-        x += 3
-        y += 1
+    if x + RIGHT < (len(map_list[row])): 
+        x += RIGHT
+        y += DOWN
     else:
-        x += 3 - len(map_list[row]) 
-        y += 1
+        x += RIGHT - len(map_list[row]) 
+        y += DOWN
 
 print(f"Trees: {tree_count}")
 print(f"Blanks: {blank_count}")
