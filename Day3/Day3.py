@@ -34,9 +34,12 @@ def count_trees(RIGHT, DOWN):
     for row in range(len(map_list)):
 
         if map_list[y][x] == "#":
-            tree_count += 1
+            tree_count += 1 
 
-        # if not reached end of row index
+        if y == len(map_list)-1:
+            break
+
+        # if not reached end of row index and not reached bottom of map
         if x + RIGHT < (len(map_list[row])): 
             x += RIGHT
             y += DOWN
@@ -44,6 +47,19 @@ def count_trees(RIGHT, DOWN):
             x += RIGHT - len(map_list[row]) 
             y += DOWN
 
-    print(f"Trees: {tree_count}")
+    return tree_count
 
-count_trees(RIGHT=3, DOWN=1)
+# Input moves strategy
+moves = [
+    {'RIGHT': 1, 'DOWN': 1},
+    {'RIGHT': 3, 'DOWN': 1},
+    {'RIGHT': 5, 'DOWN': 1},
+    {'RIGHT': 7, 'DOWN': 1},
+    {'RIGHT': 1, 'DOWN': 2},
+]
+
+answer = 1
+for move in moves:
+    answer *= count_trees(RIGHT=move['RIGHT'], DOWN=move['DOWN'])
+
+print(answer)
