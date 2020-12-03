@@ -44,4 +44,3 @@ for row in range(len(map_list)):
         y += DOWN
 
 print(f"Trees: {tree_count}")
-print(f"Blanks: {blank_count}")
