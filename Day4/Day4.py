@@ -2,6 +2,8 @@
 
 from pprint import pprint
 
+from Doc_Requirements import BYR, IYR, EYR, HGT, HCL, ECL, PID
+
 def read_in_data(file) -> list:
     '''Creates and returns a list of dicts representing passports'''
 
@@ -31,16 +33,29 @@ def count_valid_docs(data: list, criteria: tuple) -> int:
     for doc in data:
         valid_doc = True
         for option in criteria:
-            if option not in doc:
+            if option.__str__() not in doc:
                 valid_doc = False
+                break
+            if not option.valid(doc[option.__str__()]):
+                valid_doc = False
+                break
 
         number_of_valid_docs += int(valid_doc)
     
     return number_of_valid_docs
 
-CRITERIA = ('byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid')
+
+byr = BYR()
+iyr = IYR()
+eyr = EYR()
+hgt = HGT()
+hcl = HCL()
+ecl = ECL()
+pid = PID()
+
+CRITERIA = (byr, iyr, eyr, hgt, hcl, ecl, pid)
 
 data = read_in_data('data.txt')
 
-print(len(data))
+# print(len(data))
 print(count_valid_docs(data, CRITERIA))
