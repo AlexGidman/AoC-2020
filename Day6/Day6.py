@@ -21,18 +21,27 @@ def read_in_data(file) -> list:
     return tmp_list
 
 
+
 group_answers = read_in_data('data.txt')
 
 sum_of_counts = 0
 
-# Go through each group, each person, and each answer, and count for each group 
-# how many of the questions were answered yes, and sum together.
+# Go through each group, each person, and each answer, create a list of all
+# questions answered by group
 for group in group_answers:
     questions_answered = []
     for person in group:
         for answer in person:
             if answer not in questions_answered:
                 questions_answered.append(answer)
-                sum_of_counts += 1
+    # Go through each question, and check each persons answers. If it's missing
+    # flag False and it won't increase count
+    for question in questions_answered:
+        shared_question = True
+        for person in group:
+            if question not in person:
+                shared_question = False
+                break
+        sum_of_counts += shared_question
 
 print(sum_of_counts)
