@@ -14,19 +14,9 @@ def read_in_data(file) -> list:
             if line == ['']: # if eof, break
                 break
 
-            # tmp_dict = {}
-            # tmp_dict['outer'] = f"{line[0]}{line[1]}"
-
-            # if len(line) > 7: # Has inner bags
-            #     inner_dict = {}
-            #     for i in range(4, len(line), 4):
-            #         inner_dict[f"{line[i+1]}{line[i+2]}"] = int(line[i])
-            #     tmp_dict['inner'] = inner_dict
-
             if len(line) > 7:
                 tmp_dict = {}
                 tmp_dict['outer'] = f"{line[0]}{line[1]}"
-                # Using dict comprehension instead of above code
                 tmp_dict['inner'] = {f"{line[i+1]}{line[i+2]}":int(line[i]) for i in range(4, len(line), 4)}
  
             tmp_list.append(tmp_dict)
