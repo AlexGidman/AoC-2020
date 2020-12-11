@@ -3,7 +3,7 @@
 from functools import wraps
 
 def read_in_data(file) -> list:
-    '''Creates and returns a list of dicts representing instructions'''
+    '''Creates and returns a sorted list of numbers '''
 
     tmp_list = [0,] # joltage outlet of 0
 
