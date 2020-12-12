@@ -20,13 +20,13 @@ def create_map(file) -> List[list]:
 
     return map_list
 
-def occupancy_surrounding_seat(row, column, seating) -> bool:
+def occupancy_surrounding_seat(row, column, seating) -> int:
     '''checks for occupancy around the seat passed in'''
     occupied_seats = 0
     width = len(seating[row])-1
-    height = len(seating[column])-1
+    height = len(seating)-1
 
-    # Check 3 above ROW1, COL0, 
+    # Check 3 above 
     if row != 0:
         if seating[row-1][column] == '#':
             occupied_seats += 1 # oc1
@@ -50,11 +50,7 @@ def occupancy_surrounding_seat(row, column, seating) -> bool:
         if column != width and seating[row+1][column+1] == '#':
             occupied_seats += 1
 
-
-    if occupied_seats >= 4:
-        return True
-    else:
-        return False
+    return occupied_seats
 
 def lists_are_equal(list1: Union[list, List[list]], list2: Union[list, List[list]]) -> bool:
     '''checks if list values are equal'''
@@ -64,37 +60,33 @@ def lists_are_equal(list1: Union[list, List[list]], list2: Union[list, List[list
         for column in range(len(list1[row])):
             if list1[row][column] != list2[row][column]:
                 return False
-            else:
-                print(list1[row])
-                print(list2[row])
-                sleep(2)
     return True
 
 
-def stabilise_map(seating_map: List[list]) -> List[list]:
+def stabilise_map(current_map: List[list]) -> List[list]:
     '''returns stabilised map following seating rules'''
-    current_map = [row[:] for row in seating_map]
     while True:
-        # TODO: Something weird with memory going on here....
         new_map = []
         for row in range(len(current_map)):
             new_row = []
             for column in range(len(current_map[row])):
                 if current_map[row][column] == '.':
                     new_row.append('.')
-                elif occupancy_surrounding_seat(row, column, current_map):
-                    new_row.append('L')
-                else:
-                    new_row.append('#')
+                if current_map[row][column] == 'L':
+                    if occupancy_surrounding_seat(row, column, current_map) == 0:
+                        new_row.append('#')
+                    else:
+                        new_row.append('L')
+                if current_map[row][column] == '#':
+                    if occupancy_surrounding_seat(row, column, current_map) >= 4:
+                        new_row.append('L')
+                    else:
+                        new_row.append('#')
             new_map.append(new_row)
-
         if lists_are_equal(current_map, new_map):
             return new_map
         else:
-            current_map = [line[:] for line in new_map]
-            # print(current_map)
-            # print('\n\n')
-            # sleep(1)
+            return stabilise_map(new_map)
 
 
 def count_occupied_seats(seating_map: List[list]):
@@ -108,13 +100,8 @@ def count_occupied_seats(seating_map: List[list]):
 
 
 # PART 1
-seating_map = create_map('test_data.txt')
-stabilised_map1 = stabilise_map(seating_map)
-# stabilised_map2 = stabilise_map(stabilised_map1)
+seating_map = create_map('data.txt')
 
-# print(stabilised_map1[1])
-# print(stabilised_map2[1])
+stabilised_map = stabilise_map(seating_map)
 
-
-# count_occupied_seats(stabilised_map1)
-# count_occupied_seats(stabilised_map2)
+count_occupied_seats(stabilised_map)
