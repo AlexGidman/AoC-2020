@@ -20,35 +20,109 @@ def create_map(file) -> List[list]:
 
     return map_list
 
+def check_left_up_diagonal(row, column, seating, width, height) -> int:
+    if row == 0 or column == 0:
+        return 0
+    if seating[row-1][column-1] == '#':
+        return 1
+    if seating[row-1][column-1] == 'L':
+        return 0
+    row -= 1
+    column -= 1
+    return check_left_up_diagonal(row, column, seating, width, height)
+
+def check_above(row, column, seating, width, height) -> int:
+    if row == 0:
+        return 0
+    if seating[row-1][column] == '#':
+        return 1
+    if seating[row-1][column] == 'L':
+        return 0
+    row -= 1
+    return check_above(row, column, seating, width, height)
+
+def check_right_up_diagonal(row, column, seating, width, height) -> int:
+    if row == 0 or column == width:
+        return 0
+    if seating[row-1][column+1] == '#':
+        return 1
+    if seating[row-1][column+1] == 'L':
+        return 0
+    row -= 1
+    column += 1
+    return check_right_up_diagonal(row, column, seating, width, height)
+    
+def check_left(row, column, seating, width, height) -> int:
+    if column == 0:
+        return 0
+    if seating[row][column-1] == '#':
+        return 1
+    if seating[row][column-1] == 'L':
+        return 0
+    column -= 1
+    return check_left(row, column, seating, width, height)
+
+def check_right(row, column, seating, width, height) -> int:
+    if column == width:
+        return 0
+    if seating[row][column+1] == '#':
+        return 1
+    if seating[row][column+1] == 'L':
+        return 0
+    column += 1
+    return check_right(row, column, seating, width, height)
+
+def check_left_down_diagonal(row, column, seating, width, height) -> int:
+    if row == height or column == 0:
+        return 0
+    if seating[row+1][column-1] == '#':
+        return 1
+    if seating[row+1][column-1] == 'L':
+        return 0
+    row += 1
+    column -= 1
+    return check_left_down_diagonal(row, column, seating, width, height)
+
+def check_below(row, column, seating, width, height) -> int:
+    if row == height:
+        return 0
+    if seating[row+1][column] == '#':
+        return 1
+    if seating[row+1][column] == 'L':
+        return 0
+    row += 1
+    return check_below(row, column, seating, width, height)
+
+def check_right_down_diagonal(row, column, seating, width, height) -> int:
+    if row == height or column == width:
+        return 0
+    if seating[row+1][column+1] == '#':
+        return 1
+    if seating[row+1][column+1] == 'L':
+        return 0
+    row += 1
+    column += 1
+    return check_right_down_diagonal(row, column, seating, width, height)
+
 def occupancy_surrounding_seat(row, column, seating) -> int:
-    '''checks for occupancy around the seat passed in'''
+    '''checks for occupancy around the seat passed in - modified for part 2 to include line of sight'''
     occupied_seats = 0
     width = len(seating[row])-1
     height = len(seating)-1
 
     # Check 3 above 
-    if row != 0:
-        if seating[row-1][column] == '#':
-            occupied_seats += 1 # oc1
-        if column != 0 and seating[row-1][column-1] == '#':
-            occupied_seats += 1
-        if column != width and seating[row-1][column+1] == '#':
-            occupied_seats += 1 # oc2
-    
+    occupied_seats += check_left_up_diagonal(row, column, seating, width, height)
+    occupied_seats += check_above(row, column, seating, width, height)
+    occupied_seats += check_right_up_diagonal(row, column, seating, width, height)
+
     # Check either side
-    if column != 0 and seating[row][column-1] == '#':
-        occupied_seats += 1
-    if column != width and seating[row][column+1] == '#':
-        occupied_seats += 1
+    occupied_seats += check_left(row, column, seating, width, height)
+    occupied_seats += check_right(row, column, seating, width, height)
 
     # Check below
-    if row != height:
-        if seating[row+1][column] == '#':
-            occupied_seats += 1
-        if column != 0 and seating[row+1][column-1] == '#':
-            occupied_seats += 1
-        if column != width and seating[row+1][column+1] == '#':
-            occupied_seats += 1
+    occupied_seats += check_left_down_diagonal(row, column, seating, width, height)
+    occupied_seats += check_below(row, column, seating, width, height)
+    occupied_seats += check_right_down_diagonal(row, column, seating, width, height)
 
     return occupied_seats
 
@@ -78,13 +152,17 @@ def stabilise_map(current_map: List[list]) -> List[list]:
                     else:
                         new_row.append('L')
                 if current_map[row][column] == '#':
-                    if occupancy_surrounding_seat(row, column, current_map) >= 4:
+                    if occupancy_surrounding_seat(row, column, current_map) >= 5:
                         new_row.append('L')
                     else:
                         new_row.append('#')
             new_map.append(new_row)
+        # for row in new_map:
+        #     print(row)
+        # print('\n\n')
+        # sleep(5)
         if lists_are_equal(current_map, new_map):
-            return new_map
+            return new_map  # return occupied seats count here instead...
         else:
             return stabilise_map(new_map)
 
@@ -99,7 +177,7 @@ def count_occupied_seats(seating_map: List[list]):
     print(count)
 
 
-# PART 1
+# PART 1 & 2
 seating_map = create_map('data.txt')
 
 stabilised_map = stabilise_map(seating_map)
