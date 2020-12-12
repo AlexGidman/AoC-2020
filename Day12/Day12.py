@@ -76,7 +76,7 @@ def move_west(units: int):
     global wp_x
     wp_x -= units
 
-# PART 1
+# PART 1 & 2
 instructions = read_in_data('data.txt')
 
 x = 0
