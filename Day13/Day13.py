@@ -28,6 +28,7 @@ from time import sleep
 #     print((earliest-timestamp)*bus_id)
 
 # Part 2
+# This takes a while to calculate and needs optimising
 
 def get_bus_ids(file) -> list:
     '''Create a list of lists representing points and rows on the map'''
@@ -35,4 +36,20 @@ def get_bus_ids(file) -> list:
         f.readline()
         return f.readline().replace('\n', '').split(',')
 
-bus_ids = get_bus_ids
+def is_start_of_sequence(i, bus_ids, offsets):
+    # Check each offset results in modulo zero
+    for j in range(1, len(bus_ids)):
+        if (i + offsets[j]) % bus_ids[j] != 0:
+            return False
+    return True
+
+input_data = get_bus_ids('data.txt')
+bus_ids = [int(bus_id) for bus_id in input_data if bus_id != 'x']
+offsets = [input_data.index(str(bus_id)) for bus_id in bus_ids]
+
+i = 100000000000000
+while(True):
+    if is_start_of_sequence(i, bus_ids, offsets):
+        print(i)
+        break
+    i += bus_ids[0]
